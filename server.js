@@ -1,10 +1,10 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const connectDB = require('./config/db');
+const connectDB = require('./config/db.config');
 
-const flightRoutes = require('./routes/flights');
-const bookingRoutes = require('./routes/booking');
+const flightRoutes = require('./routes/flight.routes');
+const bookingRoutes = require('./routes/booking.routes');
 
 const app = express();
 

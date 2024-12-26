@@ -1,11 +1,13 @@
-const Flight = require('../models/Flight');
+const { StatusCodes } = require('http-status-codes');
+const Flight = require('../models/flights.models');
 
+// Search Flights
 exports.searchFlights = async (req, res) => {
   try {
     const { from, to, date } = req.query;
 
     if (!from || !to || !date) {
-      return res.status(400).json({ message: 'Please provide from, to, and date parameters' });
+      return res.status(StatusCodes.BAD_REQUEST).json({ message: 'Please provide from, to, and date parameters' });
     }
 
     const flights = await Flight.find({
@@ -15,31 +17,32 @@ exports.searchFlights = async (req, res) => {
     });
 
     if (flights.length === 0) {
-      return res.status(404).json({ message: 'No flights found' });
+      return res.status(StatusCodes.NOT_FOUND).json({ message: 'No flights found' });
     }
 
-    res.status(200).json({ flights });
+    res.status(StatusCodes.OK).json({ flights });
   } catch (error) {
-    res.status(500).json({ message: 'Error searching flights', error: error.message });
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'Error searching flights', error: error.message });
   }
 };
 
+// Save Flights
 exports.saveFlights = async (req, res) => {
   try {
     const { flights } = req.body;
 
     if (!Array.isArray(flights) || flights.length === 0) {
-      return res.status(400).json({ message: 'Invalid or empty flights data' });
+      return res.status(StatusCodes.BAD_REQUEST).json({ message: 'Invalid or empty flights data' });
     }
 
     const savedFlights = await Flight.insertMany(flights);
 
-    res.status(201).json({
+    res.status(StatusCodes.CREATED).json({
       message: 'Flights saved successfully',
       flights: savedFlights,
     });
   } catch (error) {
-    res.status(500).json({
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       message: 'Error saving flights',
       error: error.message,
     });
