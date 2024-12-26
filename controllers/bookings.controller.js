@@ -1,6 +1,7 @@
 const { StatusCodes } = require('http-status-codes');
 const Booking = require('../models/booking.models');
 const Flight = require('../models/flights.models');
+const { default: response } = require('../utils/responseManager.utils');
 
 // Book Flight
 exports.bookFlight = async (req, res) => {
@@ -26,10 +27,16 @@ exports.bookFlight = async (req, res) => {
 
     const savedBooking = await booking.save();
 
-    res.status(StatusCodes.CREATED).json({
-      message: 'Flight booked successfully',
-      booking: savedBooking,
-    });
+
+
+
+    // res.status(StatusCodes.CREATED).json({
+    //   message: 'Flight booked successfully',
+    //   booking: savedBooking,
+    // });
+    response(
+      res,StatusCodes.CREATED,true,"flight book suceesfully"
+    )
   } catch (error) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       message: 'Error booking flight',
